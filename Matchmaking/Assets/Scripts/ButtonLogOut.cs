@@ -1,13 +1,8 @@
 using Firebase.Auth;
 using Firebase.Database;
-using System;
-using System.Collections;
 using System.Collections.Generic;
-using TMPro;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
-using UnityEngine.UI;
 
 public class ButtonLogOut : MonoBehaviour
 {
@@ -15,13 +10,30 @@ public class ButtonLogOut : MonoBehaviour
     {
         var auth = FirebaseAuth.DefaultInstance;
         var userId = auth.CurrentUser.UserId;
-        auth.SignOut();
 
+        // Update user status to offline
         var userStatus = new Dictionary<string, object>
-    {
-        { "online", false }
-    };
-        FirebaseDatabase.DefaultInstance.GetReference("users").Child(userId).UpdateChildrenAsync(userStatus);
-    }
+        {
+            { "online", false }
+        };
 
+        FirebaseDatabase.DefaultInstance.GetReference("users").Child(userId).UpdateChildrenAsync(userStatus).ContinueWith(task =>
+        {
+            if (task.IsCompleted)
+            {
+                // Sign out the user
+                auth.SignOut();
+
+                // Load the login scene
+                UnityMainThreadDispatcher.Instance().Enqueue(() =>
+                {
+                    SceneManager.LoadScene("Login"); 
+                });
+            }
+            else if (task.IsFaulted)
+            {
+                Debug.LogError("Failed to update user status: " + task.Exception);
+            }
+        });
+    }
 }
