@@ -44,13 +44,17 @@ public class ButtonSignUp : MonoBehaviour
         }
         else
         {
-            // Firebase user has been created.
             Firebase.Auth.AuthResult result = registerTask.Result;
-            Debug.LogFormat("Firebase user created successfully: {0} ({1})",
-            result.User.DisplayName, result.User.UserId);
+            Debug.LogFormat("Firebase user created successfully: {0} ({1})", result.User.DisplayName, result.User.UserId);
 
             string name = GameObject.Find("InputUsername").GetComponent<TMP_InputField>().text;
-            mDatabaseRef.Child("users").Child(result.User.UserId).Child("username").SetValueAsync(name);
+            var user = new Dictionary<string, object>
+        {
+            { "username", name },
+            { "online", false }
+        };
+            mDatabaseRef.Child("users").Child(result.User.UserId).SetValueAsync(user);
         }
     }
+
 }
