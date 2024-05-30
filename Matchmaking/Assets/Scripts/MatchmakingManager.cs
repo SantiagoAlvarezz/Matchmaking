@@ -62,8 +62,8 @@ public class MatchmakingManager : MonoBehaviour
                     {
                         UnityMainThreadDispatcher.Instance().Enqueue(() =>
                         {
-                            // Pass the matched usernames to the match scene
-                            MatchSceneManager.SetMatchUsers(currentUserName, matchUserName);
+                            // Pass the matched usernames and ids to the match scene
+                            MatchSceneManager.SetMatchUsers(currentUserName, matchUserName, currentUserId, matchUserId);
                             SceneManager.LoadScene("Match"); 
                         });
                     }
