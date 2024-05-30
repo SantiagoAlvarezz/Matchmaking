@@ -6,22 +6,25 @@ using TMPro;
 using UnityEngine.UI;
 using Firebase.Database;
 using Firebase.Extensions;
+
 public class ButtonSignUp : MonoBehaviour
 {
     [SerializeField]
     private Button _registrationButton;
     private Coroutine _registrationCoroutine;
     private DatabaseReference mDatabaseRef;
+
     void Reset()
     {
         _registrationButton = GetComponent<Button>();
     }
+
     void Start()
     {
-        //Debug.Log(FirebaseAuth.DefaultInstance.CurrentUser.Email);
         _registrationButton.onClick.AddListener(HandleRegisterButtonClicked);
         mDatabaseRef = FirebaseDatabase.DefaultInstance.RootReference;
     }
+
     private void HandleRegisterButtonClicked()
     {
         string email = GameObject.Find("InputEmail").GetComponent<TMP_InputField>().text;
@@ -29,6 +32,7 @@ public class ButtonSignUp : MonoBehaviour
 
         _registrationCoroutine = StartCoroutine(RegisterUser(email, password));
     }
+
     private IEnumerator RegisterUser(string email, string password)
     {
         var auth = FirebaseAuth.DefaultInstance;
@@ -44,17 +48,19 @@ public class ButtonSignUp : MonoBehaviour
         }
         else
         {
+            // Firebase user has been created.
             Firebase.Auth.AuthResult result = registerTask.Result;
-            Debug.LogFormat("Firebase user created successfully: {0} ({1})", result.User.DisplayName, result.User.UserId);
+            Debug.LogFormat("Firebase user created successfully: {0} ({1})",
+            result.User.DisplayName, result.User.UserId);
 
             string name = GameObject.Find("InputUsername").GetComponent<TMP_InputField>().text;
-            var user = new Dictionary<string, object>
-        {
-            { "username", name },
-            { "online", false }
-        };
-            mDatabaseRef.Child("users").Child(result.User.UserId).SetValueAsync(user);
+            var userStatus = new Dictionary<string, object>
+            {
+                { "username", name },
+                { "online", false },
+                { "inMatch", false }
+            };
+            mDatabaseRef.Child("users").Child(result.User.UserId).UpdateChildrenAsync(userStatus);
         }
     }
-
 }

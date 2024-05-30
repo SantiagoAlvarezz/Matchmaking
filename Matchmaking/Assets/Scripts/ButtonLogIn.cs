@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Firebase.Auth;
-using Firebase.Database;
 using TMPro;
 using UnityEngine.UI;
+using Firebase.Database;
 
 public class ButtonLogIn : MonoBehaviour
 {
@@ -21,11 +21,12 @@ public class ButtonLogIn : MonoBehaviour
         _emailInputField = GameObject.Find("InputEmail").GetComponent<TMP_InputField>();
         _emailPasswordField = GameObject.Find("InputPassword").GetComponent<TMP_InputField>();
     }
+
     void Start()
     {
-
         _loginButton.onClick.AddListener(HandleLoginButtonClicked);
     }
+
     private void HandleLoginButtonClicked()
     {
         var auth = FirebaseAuth.DefaultInstance;
@@ -44,14 +45,12 @@ public class ButtonLogIn : MonoBehaviour
             Firebase.Auth.AuthResult result = task.Result;
             Debug.LogFormat("User signed in successfully: {0} ({1})", result.User.DisplayName, result.User.UserId);
 
-            // Update online status
-            var userId = result.User.UserId;
             var userStatus = new Dictionary<string, object>
-        {
-            { "online", true }
-        };
-            FirebaseDatabase.DefaultInstance.GetReference("users").Child(userId).UpdateChildrenAsync(userStatus);
+            {
+                { "online", true },
+                { "inMatch", false }
+            };
+            FirebaseDatabase.DefaultInstance.GetReference("users").Child(result.User.UserId).UpdateChildrenAsync(userStatus);
         });
     }
-
 }

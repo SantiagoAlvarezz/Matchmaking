@@ -10,21 +10,17 @@ public class ButtonLogOut : MonoBehaviour
     {
         var auth = FirebaseAuth.DefaultInstance;
         var userId = auth.CurrentUser.UserId;
+        auth.SignOut();
 
-        // Update user status to offline
         var userStatus = new Dictionary<string, object>
         {
-            { "online", false }
+            { "online", false },
+            { "inMatch", false }
         };
-
         FirebaseDatabase.DefaultInstance.GetReference("users").Child(userId).UpdateChildrenAsync(userStatus).ContinueWith(task =>
         {
             if (task.IsCompleted)
             {
-                // Sign out the user
-                auth.SignOut();
-
-                // Load the login scene
                 UnityMainThreadDispatcher.Instance().Enqueue(() =>
                 {
                     SceneManager.LoadScene("Login"); 

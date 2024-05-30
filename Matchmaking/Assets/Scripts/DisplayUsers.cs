@@ -6,8 +6,8 @@ using UnityEngine.UI;
 
 public class DisplayUsers : MonoBehaviour
 {
-    [SerializeField] private Transform userListContainer;  
-    [SerializeField] private GameObject userItemPrefab;   
+    [SerializeField] private Transform userListContainer;  // Assign the UserListPanel here
+    [SerializeField] private GameObject userItemPrefab;    // Assign the user item prefab here
 
     private DatabaseReference databaseRef;
 
@@ -41,10 +41,19 @@ public class DisplayUsers : MonoBehaviour
                     {
                         string username = userSnapshot.Child("username").Value.ToString();
                         bool isOnline = bool.Parse(userSnapshot.Child("online").Value.ToString());
+                        bool inMatch = bool.Parse(userSnapshot.Child("inMatch").Value.ToString());
 
                         GameObject userItem = Instantiate(userItemPrefab, userListContainer);
                         userItem.GetComponentInChildren<TMP_Text>().text = username;
-                        userItem.GetComponent<Image>().color = isOnline ? Color.green : Color.red; // Green for online, red for offline
+
+                        if (inMatch)
+                        {
+                            userItem.GetComponent<Image>().color = Color.blue; // Blue for in match
+                        }
+                        else
+                        {
+                            userItem.GetComponent<Image>().color = isOnline ? Color.green : Color.red; // Green for online, red for offline
+                        }
                     }
                 });
             }
