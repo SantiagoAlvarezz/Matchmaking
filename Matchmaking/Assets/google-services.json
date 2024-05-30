@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "585948659155",
+    "firebase_url": "https://matchmaking-fa514-default-rtdb.firebaseio.com",
+    "project_id": "matchmaking-fa514",
+    "storage_bucket": "matchmaking-fa514.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:585948659155:android:982c90d2985893bb1cc326",
+        "android_client_info": {
+          "package_name": "com.santiago.matchmaking"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA4rdj5kBRuSgyzQg3Xjy_fmuOhDgLucB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
